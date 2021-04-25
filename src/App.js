@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React , {useEffect, useState} from 'react'
+import {Movies} from "./components/Movies"
+import "./App.css"
+import { Container } from 'semantic-ui-react'
+import { MovieForm } from './components/MovieForm'
+
 
 function App() {
+
+  const [movies, setMovies] = useState([])
+  
+  useEffect(() => {
+    
+    // inside of use effect will get error return a promise
+    fetch("/movies").then(res=>
+      res.json().then(data=>{
+        // console.log(data.movies)
+        setMovies(data.movies);
+      })
+    );
+  }, []);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container style={{marginTop:40}}>
+      <MovieForm onNewMovie={movie=> 
+      setMovies(currentMovies=>[movie, ...currentMovies])
+      }/>
+      
+      <Movies movies={movies} />
+    </Container>
+     
   );
 }
 
